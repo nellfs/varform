@@ -15,9 +15,11 @@ model User {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  email    String  @unique
-  hash     String
-  hashedRt String?
+  email    String @unique
+  password String
+
+  firstName String
+  lastName  String?
 
   @@map("users")
 }
