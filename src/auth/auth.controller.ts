@@ -8,23 +8,19 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { isPublic } from "./decoratos/is-public.decoratos";
 import { LocalAuthGuard } from "./guard";
-import { AuthRequest } from "./models/AuthRequest";
+import { AuthRequest } from "./model/AuthRequest";
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @isPublic()
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   login(@Request() req: AuthRequest) {
     return this.authService.login(req.user);
-  }
-
-  @Get("signup")
-  signup(@Request() req) {
-    console.log(req.user);
-    // return this.authService.signup();
   }
 }
