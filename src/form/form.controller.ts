@@ -1,4 +1,5 @@
 import { Controller, Post } from '@nestjs/common';
+    console.log("hello console")
 import { isPublic } from 'src/auth/decoratos/is-public.decoratos';
 import { FormService } from './form.service';
 
@@ -6,7 +7,6 @@ import { FormService } from './form.service';
 export class FormController {
   constructor(private readonly formService: FormService) {}
 
-  @isPublic()
   @Post()
   async create(){
     return this.formService.create()
