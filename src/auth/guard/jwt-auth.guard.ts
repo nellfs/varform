@@ -1,11 +1,14 @@
 import {
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
 import { IS_PUBLIC_KEY } from "../decoratos/is-public.decoratos";
+import { UnauthorizedError } from "../errors/unauthorized.error";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {
@@ -28,17 +31,14 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     if (typeof canActivate === "boolean") {
       return canActivate;
     }
+    const canActivatePromise = canActivate as Promise<boolean>;
 
-    return super.canActivate(context);
-  }
-
-  handleRequest(err, user, info) {
-    if (err || !user) {
-      try {
-        throw err || new UnauthorizedException();
-      } catch (e) {
+    return canActivatePromise.catch((error) => {
+      if (error instanceof UnauthorizedError) {
+        throw new UnauthorizedException(error.message);
       }
-    }
-    return user;
+
+      throw new UnauthorizedException();
+    });
   }
 }

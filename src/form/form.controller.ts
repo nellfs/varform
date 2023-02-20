@@ -1,5 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { isPublic } from 'src/auth/decoratos/is-public.decoratos';
+import { Body, Controller, Post, Request } from '@nestjs/common';
 import { FormDto } from './dto/form.dto';
 import { FormService } from './form.service';
 
@@ -7,9 +6,8 @@ import { FormService } from './form.service';
 export class FormController {
   constructor(private readonly formService: FormService) {}
 
-  @isPublic()
   @Post()
-  async create(@Body() createdFormDto: FormDto){
-   return this.formService.create(createdFormDto)
+  async create(@Request() req: any ){
+   return this.formService.create({authorId: req.user.id})
   }
 }
