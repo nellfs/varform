@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Form } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FormDto } from './dto/form.dto';
-
-
-interface FormPayload {
-  id: string;
-  question: string;
-}
 
 @Injectable()
 export class FormService {
