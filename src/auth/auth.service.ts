@@ -21,11 +21,6 @@ export class AuthService {
 
     const jwtToken = this.jwtService.sign(payload);
 
-    const decodedJwtAccessToken: any =
-      this.jwtService.decode(jwtToken);
-
-    console.log(decodedJwtAccessToken);
-
     return {
       access_token: jwtToken,
     };
