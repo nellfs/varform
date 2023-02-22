@@ -22,6 +22,11 @@ export class AuthService {
 
     const jwtToken = this.jwtService.sign(payload);
 
+    const decodedJwtAccessToken: any =
+      this.jwtService.decode(jwtToken);
+
+    console.log(decodedJwtAccessToken);
+
     return {
       access_token: jwtToken,
     };
@@ -31,10 +36,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (user) {
-      const isPasswordValid = bcrypt.compare(
-        password,
-        user.password,
-      );
+      const isPasswordValid = bcrypt.compare(password, user.password);
 
       if (isPasswordValid) {
         return {
