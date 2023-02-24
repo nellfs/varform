@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { FormDto, QuestionDto } from "./dto/";
 import { Question } from "@prisma/client";
+import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientUnknownRequestError } from "@prisma/client/runtime";
 
 @Injectable()
 export class FormService {
@@ -12,10 +13,10 @@ export class FormService {
       ...formDto,
     };
     try {
-      const createdUser = await this.prisma.form.create({
+      const createdForm = await this.prisma.form.create({
         data,
       });
-      return { ...createdUser };
+      return { ...createdForm };
     } catch (error) {
       throw error;
     }
@@ -29,12 +30,13 @@ export class FormService {
 
     try {
       const createdQuestion = await this.prisma.question.create({ data })
-
       return { ...createdQuestion }
-    }catch(error) {
-      console.log(error)
+    } catch (error) {
+      if (error.code === "P2003") {
+        throw new NotFoundException("Form not found")
+      }
+      throw error;
     }
-   
   }
 
   async findUser(id: number) {

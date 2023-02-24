@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Request, Body, Param } from "@nestjs/common";
+import { Controller, Post, Request, Body, Param, NotFoundException } from "@nestjs/common";
 import { AuthRequest } from "src/auth/model";
 import { QuestionDto } from "./dto";
 import { FormService } from "./form.service";
@@ -14,6 +14,10 @@ export class FormController {
 
   @Post(':formId/question')
   async question(@Param('formId') formId: number, @Body() questionDto: QuestionDto) {
-    return this.formService.createQuestion(questionDto, Number(formId))
+    const numberFormId = Number(formId)
+    if (isNaN(numberFormId)) {
+      throw new NotFoundException("Form not found")
+    }
+    return this.formService.createQuestion(questionDto, numberFormId)
   }
 }
