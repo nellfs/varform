@@ -15,9 +15,9 @@ export class FormController {
   @Post(':formId/question')
   async question(@Param('formId') formId: number, @Body() questionDto: QuestionDto) {
     const numberFormId = Number(formId)
-    if (isNaN(numberFormId)) {
+    if (isNaN(numberFormId))
       throw new NotFoundException("Form not found")
-    }
+
     return this.formService.createQuestion(questionDto, numberFormId)
   }
 }
